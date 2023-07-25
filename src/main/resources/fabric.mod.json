@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "contracts",
+  "version": "${version}",
+  "name": "Contracts",
+  "description": "A mod that adds signable contracts",
+  "authors": [
+    "Olliejohnson"
+  ],
+  "contact": {
+    "website": "mods.oliverj.io/contracts",
+    "repo": "github.com/oliverj-io/contracts"
+  },
+  "license": "MIT",
+  "icon": "assets/contracts/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "io.oliverj.contracts.client.ContractsClient"
+    ],
+    "main": [
+      "io.oliverj.contracts.Contracts"
+    ]
+  },
+  "mixins": [
+    "contracts.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "fabric": "*",
+    "minecraft": "1.18.2"
+  }
+}
