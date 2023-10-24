@@ -1,5 +1,6 @@
 package io.oliverj.contracts;
 
+import io.oliverj.contracts.registry.EnchantmentRegistry;
 import io.oliverj.contracts.registry.ItemRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -20,5 +21,6 @@ public class Contracts implements ModInitializer {
     @Override
     public void onInitialize() {
         ItemRegistry.registerItems();
+        EnchantmentRegistry.registerEnchantments();
     }
 }

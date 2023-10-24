@@ -20,6 +20,9 @@
     ],
     "main": [
       "io.oliverj.contracts.Contracts"
+    ],
+    "cardinal-components": [
+      "io.oliverj.contracts.components.Components"
     ]
   },
   "mixins": [
@@ -29,5 +32,10 @@
     "fabricloader": ">=0.14.21",
     "fabric": "*",
     "minecraft": "1.18.2"
+  },
+  "custom": {
+    "cardinal-components": [
+      "contracts:contract"
+    ]
   }
 }
