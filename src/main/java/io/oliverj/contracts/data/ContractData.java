@@ -3,8 +3,7 @@ package io.oliverj.contracts.data;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashMap;
 
 public class ContractData {
@@ -16,12 +15,20 @@ public class ContractData {
     }
 
     public static String getContract(String contractor) {
-        import_data();
+        try {
+            import_data();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         return contracts.get(contractor);
     }
 
     private static void export_data() {
-        import_data();
+        try {
+            import_data();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         JsonObject contracts = new JsonObject();
         contracts.add("contracts", contracts);
 
@@ -33,8 +40,8 @@ public class ContractData {
         }
     }
 
-    private static void import_data() {
+    private static void import_data() throws FileNotFoundException {
         Gson gson = new Gson();
-        contracts = gson.fromJson(ClassLoader.class.getResource("assets/contracts/store-data/contracts.json").toString(), HashMap.class);
+        contracts = gson.fromJson(new BufferedReader(new FileReader(ClassLoader.class.getResource("assets/contracts/store-data/contracts.json").toString())).toString(), HashMap.class);
     }
 }

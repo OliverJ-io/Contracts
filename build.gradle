@@ -12,6 +12,11 @@ repositories {
         name = "Ladysnake Mods"
         url = "https://maven.ladysnake.org/releases"
     }
+    maven {
+        name = "Local Repository"
+        url = "http://localhost:8080/releases"
+        allowInsecureProtocol = true
+    }
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -31,6 +36,10 @@ dependencies {
     //CCA
     // modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-api:${project.cca_version}"
     // include "dev.onyxstudios.cardinal-components-api:cardinal-components-api:${project.cca_version}"
+
+    //ItemNbt
+    modImplementation "com.redgrapefruit.itemnbt:itemnbt:3.3"
+    include "com.redgrapefruit.itemnbt:itemnbt:3.3"
 }
 
 processResources {
