@@ -2,6 +2,7 @@ package io.oliverj.contracts.data;
 
 import com.google.gson.*;
 import io.oliverj.contracts.Contracts;
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.compress.utils.Lists;
 
 import java.io.*;
@@ -11,6 +12,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class ContractData {
+
+    public static final String configPath = FabricLoader.getInstance().getConfigDir() + "/contracts/contracts.json";
 
     public static HashMap<String, String> contracts = new HashMap<String, String>();
     public static HashMap<String, List<String>> contract_users = new HashMap<String, List<String>>();
@@ -83,7 +86,7 @@ public class ContractData {
             contractString.append(userString);
         }
 
-        try (FileWriter file = new FileWriter(ClassLoader.class.getResource("data/store-data/contracts.json").toString())) {
+        try (FileWriter file = new FileWriter(ClassLoader.class.getResource(configPath).toString())) {
             Contracts.LOGGER.info(contractString.toString());
             file.write(contractString.toString());
             file.flush();
@@ -94,7 +97,7 @@ public class ContractData {
 
     private static void import_data() throws FileNotFoundException {
         Gson gson = new Gson();
-        if (ClassLoader.class.getResource("data/store-data/contract.json") != null) {
+        if (ClassLoader.class.getResource(configPath) != null) {
             HashMap jsondata = gson.fromJson(new BufferedReader(new FileReader(Objects.requireNonNull(ClassLoader.class.getResource("data/store-data/contracts.json")).toString())).toString(), HashMap.class);
             contracts = (HashMap<String, String>) jsondata.get("contracts");
             contract_users = (HashMap<String, List<String>>) jsondata.get("contract-users");

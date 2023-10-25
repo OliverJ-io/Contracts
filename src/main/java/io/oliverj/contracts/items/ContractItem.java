@@ -7,6 +7,7 @@ import io.oliverj.contracts.nbt.ContractCompleteData;
 import io.oliverj.contracts.nbt.ContractedData;
 import io.oliverj.contracts.nbt.ContractorData;
 import io.oliverj.contracts.networking.NetworkIds;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -61,22 +62,29 @@ public class ContractItem extends Item {
         } else if (user.isSneaking()) {
             ContractBoolData contractDone = new ContractBoolData();
             ContractCompleteData contractComplete = new ContractCompleteData();
-            if (!contractDone.getContractBool() && !contractComplete.getContractBool()) {
-                DataClient.use(ContractorData::new, user.getStackInHand(hand), (data) -> {
-                    data.setContractor(user.getUuidAsString());
-                });
-                DataClient.use(ContractBoolData::new, user.getStackInHand(hand), (data) -> {
-                    data.setContractBool(true);
-                });
-            } else if (contractDone.getContractBool() && !contractComplete.getContractBool()) {
-                DataClient.use(ContractedData::new, user.getStackInHand(hand), (data) -> {
-                    data.setContracted(user.getUuidAsString());
-                });
-                DataClient.use(ContractCompleteData::new, user.getStackInHand(hand), (data) -> {
-                    data.setContractBool(true);
-                });
-                ContractData.saveContract(new ContractorData().getContractor(), new ContractedData().getContracted());
-            }
+
+            if (world.isClient) return super.use(world, user, hand);
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeItemStack(user.getStackInHand(hand));
+            buf.writeUuid(user.getUuid());
+            ServerPlayNetworking.send((ServerPlayerEntity) user, NetworkIds.SIGN_CONTRACT_PACKET, buf);
+
+            //if (!contractDone.getContractBool() && !contractComplete.getContractBool()) {
+            //    DataClient.use(ContractorData::new, user.getStackInHand(hand), (data) -> {
+            //        data.setContractor(user.getUuidAsString());
+            //    });
+            //    DataClient.use(ContractBoolData::new, user.getStackInHand(hand), (data) -> {
+            //        data.setContractBool(true);
+            //    });
+            //} else if (contractDone.getContractBool() && !contractComplete.getContractBool()) {
+            //    DataClient.use(ContractedData::new, user.getStackInHand(hand), (data) -> {
+            //        data.setContracted(user.getUuidAsString());
+            //    });
+            //    DataClient.use(ContractCompleteData::new, user.getStackInHand(hand), (data) -> {
+            //        data.setContractBool(true);
+            //    });
+            //    ContractData.saveContract(new ContractorData().getContractor(), new ContractedData().getContracted());
+            //}
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
