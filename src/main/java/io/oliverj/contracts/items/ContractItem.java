@@ -1,5 +1,6 @@
 package io.oliverj.contracts.items;
 
+import com.google.common.collect.Lists;
 import com.redgrapefruit.itemnbt3.DataClient;
 import io.oliverj.contracts.data.ContractData;
 import io.oliverj.contracts.nbt.ContractBoolData;
@@ -32,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.List;
 
 public class ContractItem extends Item {
@@ -65,8 +67,8 @@ public class ContractItem extends Item {
 
             if (world.isClient) return super.use(world, user, hand);
             PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeItemStack(user.getStackInHand(hand));
-            buf.writeUuid(user.getUuid());
+            //buf.writeItemStack(user.getStackInHand(hand));
+            //buf.writeUuid(user.getUuid());
             ServerPlayNetworking.send((ServerPlayerEntity) user, NetworkIds.SIGN_CONTRACT_PACKET, buf);
 
             //if (!contractDone.getContractBool() && !contractComplete.getContractBool()) {

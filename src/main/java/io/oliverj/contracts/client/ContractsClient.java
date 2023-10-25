@@ -41,10 +41,11 @@ public class ContractsClient implements ClientModInitializer {
             });
         }));
         ClientPlayNetworking.registerGlobalReceiver(NetworkIds.SIGN_CONTRACT_PACKET, ((client, handler, buf, responseSender) -> {
-            DataClient.use(ContractorData::new, buf.readItemStack(), (data) -> {
-                data.setContractor(buf.readUuid().toString());
+            assert client.player != null;
+            DataClient.use(ContractorData::new, client.player.getStackInHand(Hand.MAIN_HAND), (data) -> {
+                data.setContractor(client.player.getUuidAsString());
             });
-            DataClient.use(ContractBoolData::new, buf.readItemStack(), (data) -> {
+            DataClient.use(ContractBoolData::new, client.player.getStackInHand(Hand.MAIN_HAND), (data) -> {
                 data.setContractBool(true);
             });
         }));
