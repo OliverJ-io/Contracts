@@ -10,7 +10,6 @@ import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -18,9 +17,9 @@ import java.util.function.Supplier;
 
 public class ContractsPersistence extends PersistentState {
 
-    HashMap<String, String> contracts = new HashMap<String, String>();
-    HashMap<String, List<String>> user_contracts = new HashMap<String, List<String>>();
-    List<String> users = Lists.newArrayList();
+    public HashMap<String, String> contracts = new HashMap<String, String>();
+    public HashMap<String, List<String>> user_contracts = new HashMap<String, List<String>>();
+    public List<String> users = Lists.newArrayList();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
@@ -39,7 +38,7 @@ public class ContractsPersistence extends PersistentState {
     }
     public static ContractsPersistence getServerState(MinecraftServer server) {
         PersistentStateManager persistentStateManager = Objects.requireNonNull(server.getWorld(World.OVERWORLD)).getPersistentStateManager();
-        Supplier supplier = Suppliers.ofInstance(new ContractsPersistence());
+        Supplier<ContractsPersistence> supplier = Suppliers.ofInstance(new ContractsPersistence());
         ContractsPersistence state = persistentStateManager.getOrCreate(ContractsPersistence::createFromNbt, supplier, Contracts.MOD_ID);
         state.markDirty();
         return state;

@@ -15,46 +15,36 @@ public class ContractData {
 
     public static final String configPath = FabricLoader.getInstance().getConfigDir() + "/contracts/contracts.json";
 
-    public static HashMap<String, String> contracts = new HashMap<String, String>();
-    public static HashMap<String, List<String>> contract_users = new HashMap<String, List<String>>();
+    public HashMap<String, String> contracts = new HashMap<String, String>();
+    public HashMap<String, List<String>> contract_users = new HashMap<String, List<String>>();
 
-    public static List<String> users = Lists.newArrayList();
+    public List<String> users = Lists.newArrayList();
+
+    public static ContractData INSTANCE = new ContractData();
     public static void saveContract(String contractor, String contracted) {
         if(contractExists(contractor, contracted)) return;
         String uuid = UUID.randomUUID().toString();
-        contracts.put(uuid, contracted);
+        INSTANCE.contracts.put(uuid, contracted);
         saveContractUser(contractor, uuid);
-        export_data();
     }
 
     public static void saveContractUser(String contractor, String contractid) {
-        try {
-            import_data();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (contract_users.containsKey(contractor)) {
-            contract_users.get(contractor).add(contractid);
+        if (INSTANCE.contract_users.containsKey(contractor)) {
+            INSTANCE.contract_users.get(contractor).add(contractid);
         } else {
             List<String> list = Lists.newArrayList();
             list.add(contractid);
-            contract_users.put(contractor, list);
-            users.add(contractor);
+            INSTANCE.contract_users.put(contractor, list);
+            INSTANCE.users.add(contractor);
         }
-        export_data();
     }
 
     public static String getContract(String contractid) {
-        try {
-            import_data();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return contracts.get(contractid);
+        return INSTANCE.contracts.get(contractid);
     }
 
     public static List<String> getUserContracts(String UUID) {
-        return contract_users.get(UUID);
+        return INSTANCE.contract_users.get(UUID);
     }
 
     public static String getContractId(String UUID, String targetUUID) {
@@ -68,40 +58,5 @@ public class ContractData {
 
     public static Boolean contractExists(String contractor, String contracted) {
         return getContract(getContractId(contractor, contracted)).equals(contracted);
-    }
-
-    private static void export_data() {
-        try {
-            import_data();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        Gson gson = new GsonBuilder().create();
-        StringBuilder contractString = new StringBuilder(gson.toJson(contracts));
-
-        for (String user : users) {
-            HashMap<String, List<String>> user_data = new HashMap<String, List<String>>();
-            user_data.put(user, getUserContracts(user));
-            String userString = gson.toJson(user_data);
-            contractString.append(userString);
-        }
-
-        try (FileWriter file = new FileWriter(ClassLoader.class.getResource(configPath).toString())) {
-            Contracts.LOGGER.info(contractString.toString());
-            file.write(contractString.toString());
-            file.flush();
-        } catch (IOException e) {
-            Contracts.LOGGER.error("Failed to write contract data: "+ e.toString());
-        }
-    }
-
-    private static void import_data() throws FileNotFoundException {
-        Gson gson = new Gson();
-        if (ClassLoader.class.getResource(configPath) != null) {
-            HashMap jsondata = gson.fromJson(new BufferedReader(new FileReader(Objects.requireNonNull(ClassLoader.class.getResource("data/store-data/contracts.json")).toString())).toString(), HashMap.class);
-            contracts = (HashMap<String, String>) jsondata.get("contracts");
-            contract_users = (HashMap<String, List<String>>) jsondata.get("contract-users");
-            users = (List<String>) jsondata.get("users");
-        }
     }
 }

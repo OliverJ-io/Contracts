@@ -22,14 +22,17 @@ import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.Objects;
+
 @net.fabricmc.api.Environment(net.fabricmc.api.EnvType.CLIENT)
 public class ContractsClient implements ClientModInitializer {
 
-    private static KeyBinding signContract = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.contracts.sign", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "category.contracts.contract"));
+    private static final KeyBinding signContract = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.contracts.sign", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_B, "category.contracts.contract"));
 
     @Override
     public void onInitializeClient() {
@@ -55,6 +58,8 @@ public class ContractsClient implements ClientModInitializer {
                 assert !client1.player.getStackInHand(Hand.MAIN_HAND).isOf(new ContractItem(new FabricItemSettings()));
                 DataClient.use(ContractedData::new, client1.player.getStackInHand(Hand.MAIN_HAND), (data) -> {
                     data.setContracted(client1.player.getUuidAsString());
+                    String contractor = String.valueOf(Objects.requireNonNull(client1.player.getStackInHand(Hand.MAIN_HAND).getNbt()).get("Contractor"));
+                    ContractData.saveContract(contractor, data.getContracted());
                 });
                 DataClient.use(ContractCompleteData::new, client1.player.getStackInHand(Hand.MAIN_HAND), (data) -> {
                     data.setContractBool(true);

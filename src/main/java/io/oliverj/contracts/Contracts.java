@@ -1,5 +1,6 @@
 package io.oliverj.contracts;
 
+import io.oliverj.contracts.data.ContractData;
 import io.oliverj.contracts.data.ContractsPersistence;
 import io.oliverj.contracts.registry.EnchantmentRegistry;
 import io.oliverj.contracts.registry.ItemRegistry;
@@ -18,6 +19,7 @@ public class Contracts implements ModInitializer {
 
     public static final String MOD_ID = "contracts";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public ContractData contractData = ContractData.INSTANCE;
 
     public static final ItemGroup CONTRACTS = FabricItemGroupBuilder.build(new Identifier(MOD_ID, "contracts"),
             () -> new ItemStack(ItemRegistry.CONTRACT));
@@ -26,8 +28,17 @@ public class Contracts implements ModInitializer {
     public void onInitialize() {
         ItemRegistry.registerItems();
         EnchantmentRegistry.registerEnchantments();
-        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             ContractsPersistence serverState = ContractsPersistence.getServerState(server);
+            serverState.contracts = contractData.contracts;
+            serverState.users = contractData.users;
+            serverState.user_contracts = contractData.contract_users;
+        });
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            ContractsPersistence serverState = ContractsPersistence.getServerState(server);
+            contractData.contracts = serverState.contracts;
+            contractData.contract_users = serverState.user_contracts;
+            contractData.users = serverState.users;
         });
     }
 }

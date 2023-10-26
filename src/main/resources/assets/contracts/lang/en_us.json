@@ -1,4 +1,6 @@
 {
   "item.contracts.contract": "Contract",
-  "enchantment.contracts.contracted": "Contracted"
+  "enchantment.contracts.contracted": "Contracted",
+  "key.contracts.sign": "Sign Contract",
+  "category.contracts.contract": "Contracts"
 }
