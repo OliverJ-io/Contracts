@@ -17,8 +17,8 @@ import java.util.function.Supplier;
 
 public class ContractsPersistence extends PersistentState {
 
-    public HashMap<String, String> contracts = new HashMap<String, String>();
-    public HashMap<String, List<String>> user_contracts = new HashMap<String, List<String>>();
+    public HashMap<String, String> contracts = new HashMap<>();
+    public HashMap<String, List<String>> user_contracts = new HashMap<>();
     public List<String> users = Lists.newArrayList();
 
     @Override

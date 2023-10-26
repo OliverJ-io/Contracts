@@ -1,11 +1,8 @@
 package io.oliverj.contracts.data;
 
-import com.google.gson.*;
-import io.oliverj.contracts.Contracts;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.commons.compress.utils.Lists;
 
-import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -13,10 +10,8 @@ import java.util.UUID;
 
 public class ContractData {
 
-    public static final String configPath = FabricLoader.getInstance().getConfigDir() + "/contracts/contracts.json";
-
-    public HashMap<String, String> contracts = new HashMap<String, String>();
-    public HashMap<String, List<String>> contract_users = new HashMap<String, List<String>>();
+    public HashMap<String, String> contracts = new HashMap<>();
+    public HashMap<String, List<String>> contract_users = new HashMap<>();
 
     public List<String> users = Lists.newArrayList();
 

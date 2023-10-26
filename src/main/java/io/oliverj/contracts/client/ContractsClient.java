@@ -1,7 +1,6 @@
 package io.oliverj.contracts.client;
 
 import com.redgrapefruit.itemnbt3.DataClient;
-import io.netty.channel.ChannelHandler;
 import io.oliverj.contracts.data.ContractData;
 import io.oliverj.contracts.items.ContractItem;
 import io.oliverj.contracts.nbt.ContractBoolData;
@@ -14,17 +13,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.api.networking.v1.S2CPlayChannelEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.impl.screenhandler.client.ClientNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Hand;
-import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.Objects;
