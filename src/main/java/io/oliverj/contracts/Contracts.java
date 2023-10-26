@@ -1,9 +1,13 @@
 package io.oliverj.contracts;
 
+import io.oliverj.contracts.data.ContractsPersistence;
 import io.oliverj.contracts.registry.EnchantmentRegistry;
 import io.oliverj.contracts.registry.ItemRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -22,5 +26,8 @@ public class Contracts implements ModInitializer {
     public void onInitialize() {
         ItemRegistry.registerItems();
         EnchantmentRegistry.registerEnchantments();
+        ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+            ContractsPersistence serverState = ContractsPersistence.getServerState(server);
+        });
     }
 }

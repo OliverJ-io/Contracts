@@ -23,6 +23,7 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -35,6 +36,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class ContractItem extends Item {
     public ContractItem(Settings settings) {
@@ -96,11 +99,23 @@ public class ContractItem extends Item {
         super.appendTooltip(stack, world, tooltip, context);
 
         DataClient.use(ContractorData::new, stack, (data) -> {
-            tooltip.add(new LiteralText("Contractor: " + data.getContractor()));
+            try {
+                MinecraftServer server = MinecraftServer.class.newInstance();
+                String name = Objects.requireNonNull(server.getPlayerManager().getPlayer(UUID.fromString(data.getContractor()))).getName().asString();
+                tooltip.add(new LiteralText("Contractor: " + name));
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         DataClient.use(ContractedData::new, stack, (data) -> {
-            tooltip.add(new LiteralText("Contracted: " + data.getContracted()));
+            try {
+                MinecraftServer server = MinecraftServer.class.newInstance();
+                String name = Objects.requireNonNull(server.getPlayerManager().getPlayer(UUID.fromString(data.getContracted()))).getName().asString();
+                tooltip.add(new LiteralText("Contracted: " + name));
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 

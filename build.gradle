@@ -18,6 +18,8 @@ repositories {
         url = "http://localhost:8080/releases"
         allowInsecureProtocol = true
     }
+    maven { url "https://maven.shedaniel.me/" }
+    maven { url "https://maven.terraformersmc.com/releases/" }
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -41,6 +43,11 @@ dependencies {
     //ItemNbt
     modImplementation "com.redgrapefruit.itemnbt:itemnbt:3.3"
     include "com.redgrapefruit.itemnbt:itemnbt:3.3"
+
+    //Cloth Config
+    modApi("me.shedaniel.cloth:cloth-config-fabric:6.5.102") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 }
 
 processResources {
@@ -110,3 +117,6 @@ modrinth {
         required.project "fabric-api"
     }
 }
+
+sourceSets.main.java.srcDirs += [ 'src/main/generatedJava' ]
+compileJava.options.generatedSourceOutputDirectory = file("${projectDir}/src/main/generatedJava/io/oliverj/config")
