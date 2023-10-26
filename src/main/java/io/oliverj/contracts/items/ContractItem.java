@@ -1,15 +1,14 @@
 package io.oliverj.contracts.items;
 
-import com.google.common.collect.Lists;
 import com.redgrapefruit.itemnbt3.DataClient;
-import io.oliverj.contracts.data.ContractData;
+import io.oliverj.contracts.Contracts;
 import io.oliverj.contracts.nbt.ContractBoolData;
 import io.oliverj.contracts.nbt.ContractCompleteData;
 import io.oliverj.contracts.nbt.ContractedData;
 import io.oliverj.contracts.nbt.ContractorData;
 import io.oliverj.contracts.networking.NetworkIds;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -24,6 +23,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
+import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -34,7 +35,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -70,26 +71,7 @@ public class ContractItem extends Item {
 
             if (world.isClient) return super.use(world, user, hand);
             PacketByteBuf buf = PacketByteBufs.create();
-            //buf.writeItemStack(user.getStackInHand(hand));
-            //buf.writeUuid(user.getUuid());
             ServerPlayNetworking.send((ServerPlayerEntity) user, NetworkIds.SIGN_CONTRACT_PACKET, buf);
-
-            //if (!contractDone.getContractBool() && !contractComplete.getContractBool()) {
-            //    DataClient.use(ContractorData::new, user.getStackInHand(hand), (data) -> {
-            //        data.setContractor(user.getUuidAsString());
-            //    });
-            //    DataClient.use(ContractBoolData::new, user.getStackInHand(hand), (data) -> {
-            //        data.setContractBool(true);
-            //    });
-            //} else if (contractDone.getContractBool() && !contractComplete.getContractBool()) {
-            //    DataClient.use(ContractedData::new, user.getStackInHand(hand), (data) -> {
-            //        data.setContracted(user.getUuidAsString());
-            //    });
-            //    DataClient.use(ContractCompleteData::new, user.getStackInHand(hand), (data) -> {
-            //        data.setContractBool(true);
-            //    });
-            //    ContractData.saveContract(new ContractorData().getContractor(), new ContractedData().getContracted());
-            //}
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }
@@ -97,25 +79,12 @@ public class ContractItem extends Item {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-
         DataClient.use(ContractorData::new, stack, (data) -> {
-            try {
-                MinecraftServer server = MinecraftServer.class.newInstance();
-                String name = Objects.requireNonNull(server.getPlayerManager().getPlayer(UUID.fromString(data.getContractor()))).getName().asString();
-                tooltip.add(new LiteralText("Contractor: " + name));
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            tooltip.add(new LiteralText("Contractor: " + data.getContractor()));
         });
 
         DataClient.use(ContractedData::new, stack, (data) -> {
-            try {
-                MinecraftServer server = MinecraftServer.class.newInstance();
-                String name = Objects.requireNonNull(server.getPlayerManager().getPlayer(UUID.fromString(data.getContracted()))).getName().asString();
-                tooltip.add(new LiteralText("Contracted: " + name));
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            tooltip.add(new LiteralText("Contracted: " + data.getContracted()));
         });
     }
 

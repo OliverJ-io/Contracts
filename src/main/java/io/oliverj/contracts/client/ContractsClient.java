@@ -1,6 +1,7 @@
 package io.oliverj.contracts.client;
 
 import com.redgrapefruit.itemnbt3.DataClient;
+import io.oliverj.contracts.Contracts;
 import io.oliverj.contracts.data.ContractData;
 import io.oliverj.contracts.items.ContractItem;
 import io.oliverj.contracts.nbt.ContractBoolData;

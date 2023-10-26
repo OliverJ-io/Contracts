@@ -45,9 +45,9 @@ dependencies {
     include "com.redgrapefruit.itemnbt:itemnbt:3.3"
 
     //Cloth Config
-    modApi("me.shedaniel.cloth:cloth-config-fabric:6.5.102") {
-        exclude(group: "net.fabricmc.fabric-api")
-    }
+    //modApi("me.shedaniel.cloth:cloth-config-fabric:6.5.102") {
+    //    exclude(group: "net.fabricmc.fabric-api")
+    //}
 }
 
 processResources {
